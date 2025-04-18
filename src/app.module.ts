@@ -9,9 +9,9 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 import { ShowsModule } from './shows/shows.module';
 import { ActorModule } from './actor/actor.module';
-import { EpisodeModule } from './episode/episode.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { EpisodesModule } from './episode/episode.module';
 
 @Module({
   imports: [
@@ -38,7 +38,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     ShowsModule,
     ActorModule,
-    EpisodeModule,
+    EpisodesModule,
     UsersModule,
     AuthModule,
   ],

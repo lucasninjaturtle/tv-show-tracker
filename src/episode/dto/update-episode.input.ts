@@ -1,8 +1,6 @@
+import { InputType, Field, PartialType, ID, Int } from '@nestjs/graphql';
 import { CreateEpisodeInput } from './create-episode.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateEpisodeInput extends PartialType(CreateEpisodeInput) {
-  @Field(() => Int)
-  id: number;
-}
+export class UpdateEpisodeInput extends PartialType(CreateEpisodeInput) { }
+

@@ -50,4 +50,5 @@ export class ShowsService {
     await this.showsRepository.remove(show);
     return { ...show, id };
   }
+
 }

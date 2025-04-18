@@ -72,8 +72,10 @@ type AuthResponse {
 type Query {
   shows: [Show!]!
   show(id: ID!): Show!
-  actor(id: Int!): Actor!
-  episode(id: Int!): Episode!
+  actors: [Actor!]!
+  actor(id: ID!): Actor!
+  episodes: [Episode!]!
+  episode(id: ID!): Episode!
   users: [User!]!
   user(id: ID!): User!
   revalidate: AuthResponse!
@@ -85,11 +87,12 @@ type Mutation {
   removeShow(id: ID!): Show!
   createActor(createActorInput: CreateActorInput!): Actor!
   updateActor(updateActorInput: UpdateActorInput!): Actor!
-  removeActor(id: Int!): Actor!
+  removeActor(id: ID!): Actor!
   createEpisode(createEpisodeInput: CreateEpisodeInput!): Episode!
-  updateEpisode(updateEpisodeInput: UpdateEpisodeInput!): Episode!
-  removeEpisode(id: Int!): Episode!
+  updateEpisode(id: ID!, updateEpisodeInput: UpdateEpisodeInput!): Episode!
+  removeEpisode(id: ID!): Episode!
   blockUser(id: ID!): User!
+  addFavoriteShow(showId: ID!): User!
   signup(signupInput: SignupInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
 }
@@ -122,25 +125,30 @@ input UpdateShowInput {
 }
 
 input CreateActorInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
 }
 
 input UpdateActorInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  id: ID!
 }
 
 input CreateEpisodeInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  title: String!
+  synopsis: String
+  season: Int!
+  episodeNumber: Int!
+  releaseDate: DateTime
+  showId: ID!
 }
 
 input UpdateEpisodeInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  title: String
+  synopsis: String
+  season: Int
+  episodeNumber: Int
+  releaseDate: DateTime
+  showId: ID
 }
 
 input SignupInput {

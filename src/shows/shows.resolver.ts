@@ -1,10 +1,14 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { ShowsService } from './shows.service';
 import { Show } from './entities/show.entity';
 import { CreateShowInput, UpdateShowInput } from './dto/inputs';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Resolver(() => Show)
+@UseGuards(JwtAuthGuard)
 export class ShowsResolver {
   constructor(private readonly showsService: ShowsService) { }
 
@@ -43,4 +47,5 @@ export class ShowsResolver {
     if (!show) throw new NotFoundException(`Show with ID ${id} not found`);
     return show;
   }
+
 }

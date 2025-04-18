@@ -3,8 +3,12 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => User)
+@UseGuards(JwtAuthGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) { }
 
@@ -30,5 +34,14 @@ export class UsersResolver {
   blockUser(@Args('id', { type: () => ID }) id: string
   ): Promise<User> {
     return this.usersService.block(id);
+  }
+
+
+  @Mutation(() => User)
+  addFavoriteShow(
+    @CurrentUser() userId: User,
+    @Args('showId', { type: () => ID }) showId: string,
+  ): Promise<User> {
+    return this.usersService.addFavoriteShow(userId, showId);
   }
 }

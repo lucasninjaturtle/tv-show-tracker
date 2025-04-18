@@ -120,4 +120,32 @@ export class UsersService {
     this.logger.error(error);
     throw new InternalServerErrorException('Please check server logs');
   }
+
+
+  async addFavoriteShow(userId: User, showId: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId.id },
+      relations: ['favorites'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    const show = await this.showsRepository.findOneBy({ id: showId });
+
+    if (!show) {
+      throw new NotFoundException(`Show with id ${showId} not found`);
+    }
+
+    user.favorites = user.favorites ?? [];
+
+    const alreadyFav = user.favorites.some(s => s.id === show.id);
+    if (!alreadyFav) {
+      user.favorites.push(show);
+    }
+
+    return this.usersRepository.save(user);
+  }
+
 }

@@ -1,7 +1,22 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field, Int, ID } from '@nestjs/graphql';
 
 @InputType()
 export class CreateEpisodeInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field()
+  title: string;
+
+  @Field({ nullable: true })
+  synopsis?: string;
+
+  @Field(() => Int)
+  season: number;
+
+  @Field(() => Int)
+  episodeNumber: number;
+
+  @Field(() => Date, { nullable: true })
+  releaseDate?: Date;
+
+  @Field(() => ID)
+  showId: string;
 }

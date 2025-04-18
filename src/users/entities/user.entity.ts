@@ -37,7 +37,7 @@ export class User {
   @Field(() => Boolean)
   isActive: boolean;
 
-  @ManyToMany(() => Show, { cascade: true })
+  @ManyToMany(() => Show, show => show.favoredBy, { cascade: true })
   @JoinTable()
   @Field(() => [Show], { nullable: true })
   favorites?: Show[];
