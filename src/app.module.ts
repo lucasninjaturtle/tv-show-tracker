@@ -14,8 +14,14 @@ import { AuthModule } from './auth/auth.module';
 import { EpisodesModule } from './episode/episode.module';
 import { SeedModule } from './seed/seed.module';
 
+import { CacheModule } from '@nestjs/cache-manager';
+
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60 * 60, // 1 hr
+    }),
     ConfigModule.forRoot(),
 
     GraphQLModule.forRoot<ApolloDriverConfig>({
