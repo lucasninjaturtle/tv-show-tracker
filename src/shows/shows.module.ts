@@ -6,6 +6,7 @@ import { Show } from './entities/show.entity';
 
 @Module({
   providers: [ShowsResolver, ShowsService],
-  imports: [TypeOrmModule.forFeature([Show])]
+  imports: [TypeOrmModule.forFeature([Show])],
+  exports: [ShowsService],
 })
 export class ShowsModule { }

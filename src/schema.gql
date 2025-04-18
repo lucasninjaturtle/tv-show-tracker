@@ -95,6 +95,9 @@ type Mutation {
   addFavoriteShow(showId: ID!): User!
   signup(signupInput: SignupInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
+
+  """Ejecuta la construcción de la base de datos"""
+  executeSeed: Boolean!
 }
 
 input CreateShowInput {
@@ -126,10 +129,12 @@ input UpdateShowInput {
 
 input CreateActorInput {
   name: String!
+  showIds: [ID!]
 }
 
 input UpdateActorInput {
   name: String
+  showIds: [ID!]
   id: ID!
 }
 

@@ -12,6 +12,7 @@ import { ActorModule } from './actor/actor.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { EpisodesModule } from './episode/episode.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { EpisodesModule } from './episode/episode.module';
     EpisodesModule,
     UsersModule,
     AuthModule,
+    SeedModule,
   ],
   controllers: [],
   providers: [],

@@ -8,5 +8,6 @@ import { EpisodesResolver } from './episode.resolver';
 @Module({
   imports: [TypeOrmModule.forFeature([Episode, Show])],
   providers: [EpisodesService, EpisodesResolver],
+  exports: [EpisodesService],
 })
 export class EpisodesModule { }
