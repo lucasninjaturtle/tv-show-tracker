@@ -2,6 +2,7 @@ import { ObjectType, Field, Int, Float, ID } from '@nestjs/graphql';
 import { Actor } from 'src/actor/entities/actor.entity';
 import { ShowGenre, ShowType } from 'src/common/enums/show.enums';
 import { Episode } from 'src/episode/entities/episode.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, ManyToMany } from 'typeorm';
 
 @Entity()
@@ -47,4 +48,8 @@ export class Show {
   @Field({ defaultValue: true })
   @Column({ default: true })
   isActive: boolean;
+
+  @ManyToMany(() => User, user => user.favorites)
+  @Field(() => [User], { nullable: true })
+  favoredBy?: User[];
 }

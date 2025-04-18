@@ -2,18 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Show {
+type Actor {
+  id: ID!
+  name: String!
+  shows: [Show!]!
+}
+
+type Episode {
   id: ID!
   title: String!
-  description: String
+  synopsis: String
+  season: Int!
+  episodeNumber: Int!
   releaseDate: DateTime
-  genre: String
-  type: String
-  rating: Float
-  country: String
-  language: String
-  imageUrl: String
-  isActive: Boolean!
+  show: Show!
 }
 
 """
@@ -21,23 +23,83 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  roles: [String!]!
+  isActive: Boolean!
+  favorites: [Show!]
+}
+
+type Show {
+  id: ID!
+  title: String!
+  description: String
+  releaseDate: DateTime
+  episodes: [Episode!]
+  actors: [Actor!]
+  genre: ShowGenre!
+  type: ShowType!
+  imageUrl: String
+  isActive: Boolean!
+  favoredBy: [User!]
+}
+
+enum ShowGenre {
+  DRAMA
+  COMEDY
+  ACTION
+  SCI_FI
+  HORROR
+  ROMANCE
+  DOCUMENTARY
+  ANIMATION
+}
+
+enum ShowType {
+  SERIES
+  MOVIE
+  MINISERIES
+  SPECIAL
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
 type Query {
   shows: [Show!]!
   show(id: ID!): Show!
+  actor(id: Int!): Actor!
+  episode(id: Int!): Episode!
+  users: [User!]!
+  user(id: ID!): User!
+  revalidate: AuthResponse!
 }
 
 type Mutation {
   createShow(createShowInput: CreateShowInput!): Show!
   updateShow(id: ID!, updateShowInput: UpdateShowInput!): Show!
   removeShow(id: ID!): Show!
+  createActor(createActorInput: CreateActorInput!): Actor!
+  updateActor(updateActorInput: UpdateActorInput!): Actor!
+  removeActor(id: Int!): Actor!
+  createEpisode(createEpisodeInput: CreateEpisodeInput!): Episode!
+  updateEpisode(updateEpisodeInput: UpdateEpisodeInput!): Episode!
+  removeEpisode(id: Int!): Episode!
+  blockUser(id: ID!): User!
+  signup(signupInput: SignupInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
 }
 
 input CreateShowInput {
   title: String!
   description: String!
   releaseDate: DateTime
-  genre: String!
-  type: String!
+  genre: ShowGenre!
+  type: ShowType!
   rating: Float
   country: String
   language: String
@@ -49,12 +111,45 @@ input UpdateShowInput {
   title: String
   description: String
   releaseDate: DateTime
-  genre: String
-  type: String
+  genre: ShowGenre
+  type: ShowType
   rating: Float
   country: String
   language: String
   imageUrl: String
   isActive: Boolean = true
   id: String!
+}
+
+input CreateActorInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateActorInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateEpisodeInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateEpisodeInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input SignupInput {
+  email: String!
+  fullName: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }

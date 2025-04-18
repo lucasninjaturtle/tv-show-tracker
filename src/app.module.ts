@@ -10,6 +10,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { ShowsModule } from './shows/shows.module';
 import { ActorModule } from './actor/actor.module';
 import { EpisodeModule } from './episode/episode.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,11 +33,14 @@ import { EpisodeModule } from './episode/episode.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: true,
+      entities: [__dirname + '/**/*.entity.{ts,js}'],
       autoLoadEntities: true,
     }),
     ShowsModule,
     ActorModule,
     EpisodeModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
