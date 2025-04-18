@@ -39,11 +39,15 @@ export class ShowsService {
 
     if (!show) throw new NotFoundException(`Show #${id} not found`);
 
-    return this.showsRepository.save(show);
+    await this.showsRepository.save(show);
+    return show;
   }
 
   async remove(id: string): Promise<Show> {
+    // TODO: soft delete, integridad referencial
     const show = await this.findOne(id);
-    return this.showsRepository.remove(show);
+
+    await this.showsRepository.remove(show);
+    return { ...show, id };
   }
 }

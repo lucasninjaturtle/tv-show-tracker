@@ -23,13 +23,13 @@ scalar DateTime
 
 type Query {
   shows: [Show!]!
-  show(id: Int!): Show!
+  show(id: ID!): Show!
 }
 
 type Mutation {
   createShow(createShowInput: CreateShowInput!): Show!
-  updateShow(id: String!, updateShowInput: UpdateShowInput!): Show!
-  removeShow(id: Int!): Show!
+  updateShow(id: ID!, updateShowInput: UpdateShowInput!): Show!
+  removeShow(id: ID!): Show!
 }
 
 input CreateShowInput {

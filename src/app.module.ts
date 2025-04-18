@@ -8,6 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 import { ShowsModule } from './shows/shows.module';
+import { ActorModule } from './actor/actor.module';
+import { EpisodeModule } from './episode/episode.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { ShowsModule } from './shows/shows.module';
       autoLoadEntities: true,
     }),
     ShowsModule,
+    ActorModule,
+    EpisodeModule,
   ],
   controllers: [],
   providers: [],
