@@ -7,8 +7,10 @@ import {
   IsBoolean,
   IsDate,
   IsUrl,
+  IsEnum,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ShowGenre, ShowType } from 'src/common/enums/show.enums';
 
 @InputType()
 export class CreateShowInput {
@@ -28,15 +30,13 @@ export class CreateShowInput {
   @IsDate()
   releaseDate?: Date;
 
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  genre: string;
+  @Field(() => ShowGenre)
+  @IsEnum(ShowGenre)
+  genre: ShowGenre;
 
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  type: string;
+  @Field(() => ShowType)
+  @IsEnum(ShowType)
+  type: ShowType;
 
   @Field(() => Float, { nullable: true })
   @IsOptional()

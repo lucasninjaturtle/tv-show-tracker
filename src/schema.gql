@@ -2,18 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Show {
+type Actor {
+  id: ID!
+  name: String!
+  shows: [Show!]
+}
+
+type Episode {
   id: ID!
   title: String!
-  description: String
+  synopsis: String
+  season: Int!
+  episodeNumber: Int!
   releaseDate: DateTime
-  genre: String
-  type: String
-  rating: Float
-  country: String
-  language: String
-  imageUrl: String
-  isActive: Boolean!
+  show: Show!
 }
 
 """
@@ -21,23 +23,105 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  roles: [String!]!
+  isActive: Boolean!
+  favorites: [Show!]
+}
+
+type Show {
+  id: ID!
+  title: String!
+  description: String
+  releaseDate: DateTime
+  episodes: [Episode!]
+  actors: [Actor!]
+  genre: ShowGenre!
+  type: ShowType!
+  imageUrl: String
+  isActive: Boolean!
+  favoredBy: [User!]
+}
+
+enum ShowGenre {
+  DRAMA
+  COMEDY
+  ACTION
+  SCI_FI
+  HORROR
+  ROMANCE
+  DOCUMENTARY
+  ANIMATION
+}
+
+enum ShowType {
+  SERIES
+  MOVIE
+  MINISERIES
+  SPECIAL
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
 type Query {
-  shows: [Show!]!
-  show(id: Int!): Show!
+  shows(offset: Int! = 0, limit: Int! = 10, search: String, genre: ShowGenre, type: ShowType, sortBy: ShowSortBy, sortOrder: SortOrder = ASC): [Show!]!
+  show(id: ID!): Show!
+  actors: [Actor!]!
+  actor(id: ID!): Actor!
+  episodes: [Episode!]!
+  episode(id: ID!): Episode!
+  users(offset: Int = 0, limit: Int = 10): [User!]!
+  user(id: ID!): User!
+  favoriteShows: [Show!]!
+  me: User!
+  exportMyData: String!
+  revalidate: AuthResponse!
+}
+
+enum ShowSortBy {
+  TITLE
+  RELEASE_DATE
+  GENRE
+  TYPE
+}
+
+enum SortOrder {
+  ASC
+  DESC
 }
 
 type Mutation {
   createShow(createShowInput: CreateShowInput!): Show!
-  updateShow(id: String!, updateShowInput: UpdateShowInput!): Show!
-  removeShow(id: Int!): Show!
+  updateShow(id: ID!, updateShowInput: UpdateShowInput!): Show!
+  removeShow(id: ID!): Show!
+  createActor(createActorInput: CreateActorInput!): Actor!
+  updateActor(updateActorInput: UpdateActorInput!): Actor!
+  removeActor(id: ID!): Actor!
+  createEpisode(createEpisodeInput: CreateEpisodeInput!): Episode!
+  updateEpisode(id: ID!, updateEpisodeInput: UpdateEpisodeInput!): Episode!
+  removeEpisode(id: ID!): Episode!
+  blockUser(id: ID!): User!
+  addFavoriteShow(showId: ID!): User!
+  deleteMyAccount: Boolean!
+  signup(signupInput: SignupInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
+
+  """Ejecuta la construcción de la base de datos"""
+  executeSeed: Boolean!
 }
 
 input CreateShowInput {
   title: String!
   description: String!
   releaseDate: DateTime
-  genre: String!
-  type: String!
+  genre: ShowGenre!
+  type: ShowType!
   rating: Float
   country: String
   language: String
@@ -49,12 +133,52 @@ input UpdateShowInput {
   title: String
   description: String
   releaseDate: DateTime
-  genre: String
-  type: String
+  genre: ShowGenre
+  type: ShowType
   rating: Float
   country: String
   language: String
   imageUrl: String
   isActive: Boolean = true
-  id: String!
+  actorIds: [ID!]
+}
+
+input CreateActorInput {
+  name: String!
+  showIds: [ID!]
+}
+
+input UpdateActorInput {
+  name: String
+  showIds: [ID!]
+  id: ID!
+}
+
+input CreateEpisodeInput {
+  title: String!
+  synopsis: String
+  season: Int!
+  episodeNumber: Int!
+  releaseDate: DateTime
+  showId: ID!
+}
+
+input UpdateEpisodeInput {
+  title: String
+  synopsis: String
+  season: Int
+  episodeNumber: Int
+  releaseDate: DateTime
+  showId: ID
+}
+
+input SignupInput {
+  email: String!
+  fullName: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }

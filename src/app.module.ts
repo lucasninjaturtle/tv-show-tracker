@@ -8,9 +8,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 import { ShowsModule } from './shows/shows.module';
+import { ActorModule } from './actor/actor.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { EpisodesModule } from './episode/episode.module';
+import { SeedModule } from './seed/seed.module';
+
+import { CacheModule } from '@nestjs/cache-manager';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60 * 60, // 1 hr
+    }),
     ConfigModule.forRoot(),
 
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -29,9 +41,16 @@ import { ShowsModule } from './shows/shows.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: true,
+      entities: [__dirname + '/**/*.entity.{ts,js}'],
       autoLoadEntities: true,
     }),
     ShowsModule,
+    ActorModule,
+    EpisodesModule,
+    UsersModule,
+    AuthModule,
+    SeedModule,
+    CommonModule
   ],
   controllers: [],
   providers: [],
