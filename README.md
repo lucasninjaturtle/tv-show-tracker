@@ -28,7 +28,7 @@
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/tv-show-tracker-api.git
+git clone https://github.com/lucasninaturtle/tv-show-tracker.git
 cd tv-show-tracker-api
 ```
 
