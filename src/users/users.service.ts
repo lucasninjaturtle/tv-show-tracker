@@ -6,9 +6,9 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { unparse } from 'papaparse';
 
 import { User } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { SignupInput } from '../auth/dto/inputs/signup.input';
 
@@ -164,5 +164,55 @@ export class UsersService {
     if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
     return user.favorites ?? [];
   }
+
+  async findOneWithAllData(userId: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['favorites'],
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  async deleteAccount(userId: string): Promise<boolean> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
+    // Opcional: eliminar relaciones (ej. favoritos)
+    await this.usersRepository
+      .createQueryBuilder()
+      .relation(User, 'favorites')
+      .of(userId)
+      .remove(await this.getFavoriteShows(userId));
+
+    await this.usersRepository.delete(userId);
+    return true;
+  }
+
+  async exportUserData(userId: string): Promise<string> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['favorites'],
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    const userData = [
+      {
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        roles: user.roles.join(', '),
+        isActive: user.isActive,
+        favorites: user.favorites?.map(show => show.title).join(', ') || 'None',
+      }
+    ];
+
+    const csv = unparse(userData); // 👈 ESTE es el bueno
+
+    return csv;
+  }
+
 
 }

@@ -29,6 +29,6 @@ localhost:3000/graphql
 
 # Notes
 
-- Principios SOLID & Folder structure recomendada por NestJs
+- SOLID Principles & Folder structure recommended by NestJs
 - Pagination & Filters on "Shows": offset : number (startsAt) | limit : number (takesMany) || Genre, type, Sorts.
-- 
+- RGPD: Right to Access & Right to be Forgotten + export CSV

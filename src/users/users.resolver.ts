@@ -57,5 +57,26 @@ export class UsersResolver {
     return this.usersService.getFavoriteShows(user.id);
   }
 
+  @Query(() => User, { name: 'me' })
+  @UseGuards(JwtAuthGuard)
+  getMyData(@CurrentUser() user: User): Promise<User> {
+    return this.usersService.findOneWithAllData(user.id);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
+  async deleteMyAccount(@CurrentUser() user: User): Promise<boolean> {
+    return this.usersService.deleteAccount(user.id);
+  }
+
+  @Query(() => String)
+  @UseGuards(JwtAuthGuard)
+  async exportMyData(
+    @CurrentUser() user: User,
+  ): Promise<string> {
+    return this.usersService.exportUserData(user.id);
+  }
+
+
 
 }

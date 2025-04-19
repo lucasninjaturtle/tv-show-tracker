@@ -79,6 +79,8 @@ type Query {
   users(offset: Int = 0, limit: Int = 10): [User!]!
   user(id: ID!): User!
   favoriteShows: [Show!]!
+  me: User!
+  exportMyData: String!
   revalidate: AuthResponse!
 }
 
@@ -106,6 +108,7 @@ type Mutation {
   removeEpisode(id: ID!): Episode!
   blockUser(id: ID!): User!
   addFavoriteShow(showId: ID!): User!
+  deleteMyAccount: Boolean!
   signup(signupInput: SignupInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
 
