@@ -5,25 +5,29 @@
 
 # Dev
 
-1. Clonar el proyecto
-2. Copiar el ```env.template``` y renombar a ```.env```
-3. Ejecutar
+1. Clone the project
+2. Copy ```env.template``` and rename to ```.env```
+3. Run
 ```
 yarn install
 ```
-4. Levantar la imagen (Docker desktop)
+4. Install the image (Docker desktop)
 ```
 docker compose up -d
 ```
 
-5. Levantar el backend de Nest
+5. Raise the Nest backend
 ```
 yarn start:dev
 ```
 
-6. Visiar el sitio
+6. Visit the site
 ```
 localhost:3000/graphql
+```
+7.  Test - run
+```
+yarn test
 ```
 
 
