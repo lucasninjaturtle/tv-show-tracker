@@ -15,6 +15,7 @@ import { SignupInput } from '../auth/dto/inputs/signup.input';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Show } from 'src/shows/entities/show.entity';
+import { PaginationArgs } from 'src/common/dto/args/pagination.ars';
 
 @Injectable()
 export class UsersService {
@@ -42,8 +43,14 @@ export class UsersService {
   }
 
 
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find({ relations: ['favorites'] });
+  async findAll({ offset, limit }: PaginationArgs): Promise<User[]> {
+    return this.usersRepository.find({
+      skip: offset,
+      take: limit,
+      order: {
+        fullName: 'ASC', // Podés cambiar el campo y orden si querés
+      },
+    });
   }
 
   async findOneByEmail(email: string): Promise<User> {
@@ -146,6 +153,16 @@ export class UsersService {
     }
 
     return this.usersRepository.save(user);
+  }
+
+  async getFavoriteShows(userId: string): Promise<Show[]> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['favorites'],
+    });
+
+    if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
+    return user.favorites ?? [];
   }
 
 }

@@ -13,7 +13,7 @@ export class Actor {
   @Column()
   name: string;
 
-  @Field(() => [Show])
+  @Field(() => [Show], { nullable: true })
   @ManyToMany(() => Show, show => show.actors)
   shows: Show[];
 }

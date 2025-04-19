@@ -15,6 +15,7 @@ import { EpisodesModule } from './episode/episode.module';
 import { SeedModule } from './seed/seed.module';
 
 import { CacheModule } from '@nestjs/cache-manager';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     UsersModule,
     AuthModule,
     SeedModule,
+    CommonModule
   ],
   controllers: [],
   providers: [],

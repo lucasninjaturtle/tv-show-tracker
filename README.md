@@ -25,3 +25,10 @@ yarn start:dev
 ```
 localhost:3000/graphql
 ```
+
+
+# Notes
+
+- Principios SOLID & Folder structure recomendada por NestJs
+- Pagination & Filters on "Shows": offset : number (startsAt) | limit : number (takesMany) || Genre, type, Sorts.
+- 

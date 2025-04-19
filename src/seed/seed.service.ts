@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, In } from 'typeorm';
 
 import { User } from 'src/users/entities/user.entity';
 import { Show } from 'src/shows/entities/show.entity';
@@ -42,50 +42,44 @@ export class SeedService {
         this.isProd = configService.get('STATE') === 'prod';
     }
 
-    async executeSeed() {
+    async executeSeed(): Promise<boolean> {
         if (this.isProd) {
             throw new UnauthorizedException('We cannot run SEED on Prod');
         }
 
         await this.clearDatabase();
 
-        const user = await this.loadUsers();
-        const shows = await this.loadShows(user);
-        const episodes = await this.loadEpisodes(shows);
+        const users = await this.loadUsers();
+        const shows = await this.loadShows();
+        await this.loadEpisodes(shows);
         await this.loadActors(shows);
+        await this.assignFavoriteShows(users, shows);
 
         return true;
     }
 
     async clearDatabase() {
-        await this.dataSource.query('DELETE FROM "users_favorites_show"');
-
-        // 🧹 Luego borrar dependientes
-        await this.episodeRepository.delete({});
-        await this.actorRepository.delete({});
-
-        // 🧹 Ahora podemos borrar shows y users
-        await this.showRepository.delete({});
-        await this.userRepository.delete({});
+        await this.dataSource.query(`
+      TRUNCATE "users_favorites_show", "show_actors_actor", "episode", "actor", "show", "users"
+      RESTART IDENTITY CASCADE
+    `);
     }
 
-
-
-    private async loadUsers(): Promise<User> {
+    private async loadUsers(): Promise<User[]> {
         const users: User[] = [];
 
         for (const user of SEED_USERS as SignupInput[]) {
             users.push(await this.usersService.create(user));
         }
 
-        return users[0];
+        return users;
     }
 
-    private async loadShows(user: User): Promise<Show[]> {
+    private async loadShows(): Promise<Show[]> {
         const showInstances: Show[] = [];
 
         for (const show of SEED_SHOWS) {
-            showInstances.push(await this.showsService.create({ ...show }));
+            showInstances.push(await this.showsService.create(show));
         }
 
         return showInstances;
@@ -120,7 +114,7 @@ export class SeedService {
 
             const input: CreateActorInput = {
                 name: actor.name,
-                showIds: relatedShows.map(show => show.id)
+                showIds: relatedShows.map(show => show.id),
             };
 
             actorPromises.push(this.actorsService.create(input));
@@ -129,4 +123,11 @@ export class SeedService {
         await Promise.all(actorPromises);
     }
 
+    private async assignFavoriteShows(users: User[], shows: Show[]) {
+        for (const user of users) {
+            const favorites = shows.sort(() => 0.5 - Math.random()).slice(0, 5);
+            user.favorites = favorites;
+            await this.userRepository.save(user);
+        }
+    }
 }

@@ -5,7 +5,7 @@
 type Actor {
   id: ID!
   name: String!
-  shows: [Show!]!
+  shows: [Show!]
 }
 
 type Episode {
@@ -70,15 +70,28 @@ type AuthResponse {
 }
 
 type Query {
-  shows: [Show!]!
+  shows(offset: Int! = 0, limit: Int! = 10, search: String, genre: ShowGenre, type: ShowType, sortBy: ShowSortBy, sortOrder: SortOrder = ASC): [Show!]!
   show(id: ID!): Show!
   actors: [Actor!]!
   actor(id: ID!): Actor!
   episodes: [Episode!]!
   episode(id: ID!): Episode!
-  users: [User!]!
+  users(offset: Int = 0, limit: Int = 10): [User!]!
   user(id: ID!): User!
+  favoriteShows: [Show!]!
   revalidate: AuthResponse!
+}
+
+enum ShowSortBy {
+  TITLE
+  RELEASE_DATE
+  GENRE
+  TYPE
+}
+
+enum SortOrder {
+  ASC
+  DESC
 }
 
 type Mutation {
@@ -124,7 +137,7 @@ input UpdateShowInput {
   language: String
   imageUrl: String
   isActive: Boolean = true
-  id: String!
+  actorIds: [ID!]
 }
 
 input CreateActorInput {

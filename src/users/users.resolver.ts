@@ -6,6 +6,8 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { Show } from 'src/shows/entities/show.entity';
+import { PaginationArgs } from 'src/common/dto/args/pagination.ars';
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard)
@@ -13,8 +15,10 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) { }
 
   @Query(() => [User], { name: 'users' })
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  findAll(
+    @Args() paginationArgs: PaginationArgs,
+  ): Promise<User[]> {
+    return this.usersService.findAll(paginationArgs);
   }
 
   @Query(() => User, { name: 'user' })
@@ -44,4 +48,14 @@ export class UsersResolver {
   ): Promise<User> {
     return this.usersService.addFavoriteShow(userId, showId);
   }
+
+  @Query(() => [Show], { name: 'favoriteShows' })
+  @UseGuards(JwtAuthGuard)
+  async getFavoriteShows(
+    @CurrentUser() user: User,
+  ): Promise<Show[]> {
+    return this.usersService.getFavoriteShows(user.id);
+  }
+
+
 }
